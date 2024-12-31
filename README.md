@@ -3,4 +3,4 @@
 ViNG is a mockup of a social media site.
 
 -- TechStack
-React SPA Using TailwindCSS, Shadcn/ui, Express, Prisma ORM, sqlite
+React SPA with Typescript using TailwindCSS, Shadcn/ui, Express, Prisma ORM, SQLite
