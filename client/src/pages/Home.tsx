@@ -1,11 +1,14 @@
-import Navbar from "@/components/ui/Navbar";
+import { LoginForm } from "@/components/login-form";
 
 function Home() {
     return ( 
-        <>
-            <Navbar />
-            <p className="bg-primary text-primary">HEJ!</p>
-        </>
+      <>
+          <div className="flex min-h-svh items-center justify-center">
+            <div className="w-screen max-w-sm">
+             <LoginForm />
+            </div>
+          </div>
+      </>
     );
 }
 

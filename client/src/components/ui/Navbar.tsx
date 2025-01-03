@@ -1,51 +1,56 @@
 import { Button } from "@/components/ui/button";
 import {
   NavigationMenu,
-  NavigationMenuContent,
   NavigationMenuItem,
   NavigationMenuLink,
-  NavigationMenuList,
-  NavigationMenuTrigger,
+  NavigationMenuList,  
   navigationMenuTriggerStyle,
 } from "@/components/ui/navigation-menu"
 import { Link } from "react-router";
+import { ModeToggle } from "../mode-toggle";
 
 const Navbar = () => {
   return (
-    <nav className="bg-primary p-4 ">
+    <nav className="mt-6 z-40 fixed top-0 w-screen">
       <div className="container mx-auto flex items-center justify-between">
-        {/* Logo */}
-        <div className="text-4xl font-bold">ViNG </div>
+        <Link to="/" className="text-4xl font-bold text-primary ">ViNG </ Link>
 
-        <NavigationMenu >
-          <NavigationMenuList >
+        <div className="flex gap-10">
+          <NavigationMenu >
+          <NavigationMenuList className="flex gap-10" >
+            <NavigationMenuItem>
+            <Link to="/dashboard">
+              <NavigationMenuLink className={navigationMenuTriggerStyle()} >
+                dashboard
+              </NavigationMenuLink>
+            </Link>
+          </NavigationMenuItem>
           <NavigationMenuItem>
-          <Link to="/dashboard">
-            <NavigationMenuLink className={navigationMenuTriggerStyle()} >
-              dashboard?
-            </NavigationMenuLink>
-          </Link>
-        </NavigationMenuItem>
-        <NavigationMenuItem>
-          <Link to="/docs" >
-            <NavigationMenuLink className={navigationMenuTriggerStyle()}>
-              Documentation
-            </NavigationMenuLink>
-          </Link>
-        </NavigationMenuItem>
-        <NavigationMenuItem>
-          <Link to="/docs">
-            <NavigationMenuLink className={navigationMenuTriggerStyle()}>
-              Documentation
-            </NavigationMenuLink>
-          </Link>
-        </NavigationMenuItem>
-          </NavigationMenuList>
-        </NavigationMenu>
+            <Link to="/docs" >
+              <NavigationMenuLink className={navigationMenuTriggerStyle()}>
+                Something
+              </NavigationMenuLink>
+            </Link>
+          </NavigationMenuItem>
+          <NavigationMenuItem>
+            <Link to="/docs">
+              <NavigationMenuLink className={navigationMenuTriggerStyle()}>
+                Nothing
+              </NavigationMenuLink>
+            </Link>
+          </NavigationMenuItem>
+            </NavigationMenuList>
+          </NavigationMenu>
+        </div>
 
-        <Button className="bg-secondary-main text-white hover:bg-secondary-light">
-          Sign Up
-        </Button>
+        <div className="flex gap-4 text-center justify-center">
+          <Link to="/sign-up" >
+            <Button>
+              Sign up
+            </Button>
+          </Link>
+          <ModeToggle />
+        </div>
       </div>
     </nav>
   );
