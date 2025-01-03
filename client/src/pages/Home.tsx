@@ -1,7 +1,12 @@
-import React, { useState } from "react"
+import Navbar from "@/components/ui/Navbar";
 
-export default function Home () {
-
-    
-    return (<p className="p-6 bg-violet-300 text-white text-2xl">Home!</p>)
+function Home() {
+    return ( 
+        <>
+            <Navbar />
+            <p className="bg-primary text-primary">HEJ!</p>
+        </>
+    );
 }
+
+export default Home;

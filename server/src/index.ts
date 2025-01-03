@@ -7,7 +7,7 @@ const prisma = new PrismaClient();
 const port = 4000;
 
 
-app.post('/create-user', async (req, res) => {
+app.post('/create-user', async (req: Request, res: Response) => {
   const userData = req.body;
 
   if (!userData.email || !userData.name || userData.password ) {
@@ -18,22 +18,22 @@ app.post('/create-user', async (req, res) => {
   const user = await prisma.user.create({
     data: {
       name: userData.name,
-      email: userData.Email,
-      password: //password encrypted inshallah,// 
+      email: userData.email,
+      password: userData.password//password encrypted inshallah,// 
       }
   });
 
   res.send({ success: "Added " + user.name + " successfully"});
 });
 
-app.get({'/get-posts', async (req: void, res: Array | null ) => {
+app.get('/get-posts', async (req: Request, res: Response ) => {
 
-  const posts: Array = await prisma.post.findMany();
+  const posts = await prisma.post.findMany();
 
   res.send(posts);
 
 
-}})
+})
 
 
 app.listen(port, () => {
