@@ -47,7 +47,7 @@ export function LoginForm({
             </div>
             <div className="mt-4 text-center text-sm">
               Don&apos;t have an account?{" "}
-              <a href="/dashboard" className="underline underline-offset-4">
+              <a href="/sign-up" className="underline underline-offset-4">
                 Sign up
               </a>
             </div>

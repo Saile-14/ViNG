@@ -1,5 +1,15 @@
+import { RegisterForm } from "@/components/register-form";
+
 export default function Signup () {
 
-    return (<p> this will be sign up page!</p>)
+    return (
+    <>
+        <div className="flex min-h-svh items-center justify-center">
+            <div className="w-screen max-w-sm">
+                <RegisterForm />
+            </div>
+        </div>
+    </>
+    )
 
 }

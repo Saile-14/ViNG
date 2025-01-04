@@ -1,10 +1,36 @@
-import express , { Request, Response } from 'express';
+import express , { Request, Response, NextFunction } from 'express';
 import { PrismaClient } from '@prisma/client';
+import bcrypt from "bcryptjs";
+import jwt from "jsonwebtoken";
+import cors from "cors";
+
+
 
 
 const app = express();
 const prisma = new PrismaClient();
 const port = 4000;
+
+app.use(express.json());
+app.use(cors());
+
+const verifyToken = (req:Request, res:Response, next: NextFunction ) => {
+
+  const token = req.headers["x-access-token"];
+
+  jwt.verify(token, process.env.SECRET_KEY, (error, decoded) => {
+
+      if (error) {
+          res.send({ error: "You session has expired or does not exist." });
+          return;
+      } else {
+          req.userId = decoded.userId;
+          next();
+      }
+
+  });
+
+};
 
 
 app.post('/create-user', async (req: Request, res: Response) => {
@@ -28,11 +54,16 @@ app.post('/create-user', async (req: Request, res: Response) => {
 
 app.get('/get-posts', async (req: Request, res: Response ) => {
 
-  const posts = await prisma.post.findMany();
-
-  res.send(posts);
-
-
+  try {
+    const posts = await prisma.post.findMany({
+      orderBy: {
+        createdAt: 'desc',
+      },
+    });
+    res.send(posts);
+  } catch (error) {
+    res.status(500).send({error: "Failed to fetch posts"})  
+  }
 })
 
 

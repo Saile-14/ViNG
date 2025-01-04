@@ -11,39 +11,38 @@ import { ModeToggle } from "../mode-toggle";
 
 const Navbar = () => {
   return (
-    <nav className="mt-6 z-40 fixed top-0 w-screen">
-      <div className="container mx-auto flex items-center justify-between">
-        <Link to="/" className="text-4xl font-bold text-primary ">ViNG </ Link>
+    <nav className="mt-6 px-10 pb-10 z-40 fixed top-0 w-screen flex items-center justify-between">
+        <Link to="/" className="text-4xl w-44 text-center font-bold text-primary ">ViNG </ Link>
 
-        <div className="flex gap-10">
+        <div className="flex-grow flex text-center justify-center">
           <NavigationMenu >
-          <NavigationMenuList className="flex gap-10" >
-            <NavigationMenuItem>
-            <Link to="/dashboard">
-              <NavigationMenuLink className={navigationMenuTriggerStyle()} >
-                dashboard
-              </NavigationMenuLink>
-            </Link>
-          </NavigationMenuItem>
-          <NavigationMenuItem>
-            <Link to="/docs" >
-              <NavigationMenuLink className={navigationMenuTriggerStyle()}>
-                Something
-              </NavigationMenuLink>
-            </Link>
-          </NavigationMenuItem>
-          <NavigationMenuItem>
-            <Link to="/docs">
-              <NavigationMenuLink className={navigationMenuTriggerStyle()}>
-                Nothing
-              </NavigationMenuLink>
-            </Link>
-          </NavigationMenuItem>
+            <NavigationMenuList className="" >
+              <NavigationMenuItem>
+                <Link to="/dashboard">
+                  <NavigationMenuLink className={`${navigationMenuTriggerStyle()} w-32 text-center`} >
+                    Dashboard
+                  </NavigationMenuLink>
+                </Link>
+              </NavigationMenuItem>
+              <NavigationMenuItem>
+                <Link to="/docs" >
+                  <NavigationMenuLink className={`${navigationMenuTriggerStyle()} w-32 text-center`}>
+                    Something
+                  </NavigationMenuLink>
+                </Link>
+              </NavigationMenuItem>
+              <NavigationMenuItem>
+                <Link to="/docs">
+                  <NavigationMenuLink className={`${navigationMenuTriggerStyle()} w-32 text-center`}>
+                    Nothing
+                  </NavigationMenuLink>
+                </Link>
+              </NavigationMenuItem>
             </NavigationMenuList>
           </NavigationMenu>
         </div>
 
-        <div className="flex gap-4 text-center justify-center">
+        <div className="flex gap-4 w-44 justify-center">
           <Link to="/sign-up" >
             <Button>
               Sign up
@@ -51,7 +50,6 @@ const Navbar = () => {
           </Link>
           <ModeToggle />
         </div>
-      </div>
     </nav>
   );
 };
