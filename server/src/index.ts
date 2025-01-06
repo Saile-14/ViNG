@@ -14,21 +14,33 @@ const port = 4000;
 app.use(express.json());
 app.use(cors());
 
-const verifyToken = (req:Request, res:Response, next: NextFunction ) => {
+interface CustomRequest extends Request {
+  userId?: string;
+}
+
+const verifyToken = (req:CustomRequest, res:Response, next: NextFunction ) => {
 
   const token = req.headers["x-access-token"];
 
-  jwt.verify(token, process.env.SECRET_KEY, (error, decoded) => {
+  if (!token || Array.isArray(token)) {
+    return res.send({error: 'No Token Provided'});
+  }
+
+  
+
+  jwt.verify(token, process.env.SECRET_KEY!, (error, decoded) => {
 
       if (error) {
           res.send({ error: "You session has expired or does not exist." });
           return;
+      } else if (decoded && typeof decoded !== "string" && "userId" in decoded) {
+        req.userId = (decoded as jwt.JwtPayload).userId;
+        next();
       } else {
-          req.userId = decoded.userId;
-          next();
-      }
+          res.send({error: "Could not authenticate session"})
+          return;
 
-  });
+  }});
 
 };
 
