@@ -3,12 +3,15 @@ import { PrismaClient } from '@prisma/client';
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import cors from "cors";
+import emailValidator from "email-validator";
+import passwordValidator from 'password-validator';
 
 
 
 
 const app = express();
 const prisma = new PrismaClient();
+const schema = new passwordValidator();
 const port = 4000;
 
 app.use(express.json());
@@ -18,12 +21,13 @@ interface CustomRequest extends Request {
   userId?: string;
 }
 
-const verifyToken = (req:CustomRequest, res:Response, next: NextFunction ) => {
+const verifyToken = (req:CustomRequest, res:Response, next: NextFunction ): void  => {
 
   const token = req.headers["x-access-token"];
 
   if (!token || Array.isArray(token)) {
-    return res.send({error: 'No Token Provided'});
+    res.send({error: 'No Token Provided'});
+    return;
   }
 
   
@@ -53,18 +57,93 @@ app.post('/create-user', async (req: Request, res: Response) => {
     return;
   }
 
-  const user = await prisma.user.create({
-    data: {
-      name: userData.name,
-      email: userData.email,
-      password: userData.password//password encrypted inshallah,// 
-      }
+  const emailValid = emailValidator.validate(userData.email);
+  if (!emailValid) {
+      res.send({ error: "The email you submitted is not valid." });
+      return;
+  }
+  
+
+  const emailExists = await prisma.user.findUnique({
+    where: { email: userData.email }
   });
 
-  res.send({ success: "Added " + user.name + " successfully"});
+  if (emailExists) {
+    res.send({ error: "An account with this email already exists." });
+    return;
+  }
+
+  schema
+        .is().min(8)                                    
+        .is().max(100)                                  
+        .has().uppercase()                              
+        .has().lowercase()                              
+        .has().digits(2)                                
+        .has().not().spaces(); 
+
+  
+  const passwordValid = schema.validate(userData.password);
+
+  if (!passwordValid) {
+    res.send({ error: "Your password is not safe, please include 8 characters with upper and lower case letters, and numbers." });
+    return;
+}
+
+
+  try {
+    const hashedPassword = bcrypt.hashSync(userData.password, 10);
+
+    const user = await prisma.user.create({
+        data: {
+            email: userData.email,
+            password: hashedPassword,
+            fullName: userData.fullName
+        }
+    });
+  } catch (error) {
+      console.log(error);
+      res.send({ error: "Something went wrong. Please try again later." });
+      return;
+  }
+  res.send({ success: "Added user successfully"});
 });
 
-app.get('/get-posts', async (req: Request, res: Response ) => {
+
+app.post('/login', async (req:Request, res:Response) => {
+    const loginData = req.body;
+
+    if (!loginData.email || !loginData.password) {
+      res.send({error: "You've left empty fields!"});
+      return;
+    }
+
+    const user = await prisma.user.findUnique({
+      where: {email: loginData.email}
+    });
+
+    if (!user) {
+      res.send({error:"No user found with that email."});
+      return;
+    }
+
+    const passwordValid = await bcrypt.compare(loginData.password, user.password);
+
+    if (!passwordValid) {
+      res.send({error: "password for that email is invalid."});
+      return;
+    }
+
+    delete user.password;
+
+    res.send({
+      token: jwt.sign({ userId: user.id }, process.env.SECRET_KEY!, { expiresIn: "1h" }),
+      user
+  });
+});
+
+
+
+app.get('/get-posts', verifyToken, async (req: Request, res: Response ) => {
 
   try {
     const posts = await prisma.post.findMany({
@@ -74,9 +153,9 @@ app.get('/get-posts', async (req: Request, res: Response ) => {
     });
     res.send(posts);
   } catch (error) {
-    res.status(500).send({error: "Failed to fetch posts"})  
+    res.status(500).send({error: "Failed to fetch posts"});  
   }
-})
+});
 
 
 app.listen(port, () => {
