@@ -8,6 +8,7 @@ import Signup from './pages/Signup.tsx';
 import Navbar from './components/ui/Navbar.tsx';
 import AuthSignup from './pages/AuthSignup.tsx';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { MyProfile } from './pages/MyProfile.tsx';
 
 const queryClient = new QueryClient();
 
@@ -24,6 +25,7 @@ createRoot(document.getElementById('root')!).render(
             <Route index path="/" element={<Home />} />
             <Route path="/dashboard" element={<AuthSignup />} />
             <Route path="/sign-up" element={<Signup/>} />
+            <Route path="/my-profile" element={<MyProfile />} />
           </Route>    
         </Routes>
       </BrowserRouter>

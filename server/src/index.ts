@@ -18,7 +18,7 @@ app.use(express.json());
 app.use(cors());
 
 interface CustomRequest extends Request {
-  userId?: string;
+  userId?: number;
 }
 
 const verifyToken = (req:CustomRequest, res:Response, next: NextFunction ): void  => {
@@ -145,6 +145,7 @@ app.post('/login', async (req:Request, res:Response) => {
 
 app.get('/get-posts', verifyToken, async (req: Request, res: Response ) => {
 
+
   try {
     const posts = await prisma.post.findMany({
       orderBy: {
@@ -155,6 +156,56 @@ app.get('/get-posts', verifyToken, async (req: Request, res: Response ) => {
   } catch (error) {
     res.status(500).send({error: "Failed to fetch posts"});  
   }
+});
+
+app.get('/get-user-posts',verifyToken, async (req: CustomRequest, res: Response) => {
+
+
+    try {
+      const posts = await prisma.post.findMany({
+        orderBy: {createdAt: 'desc'},
+        where: { userId: req.userId},
+      });
+
+      res.status(200).send(posts)
+    } catch (error) {
+      res.status(400).send({error: "Could not posts from this specific user"})
+    }
+
+    
+});
+
+app.post('/create-post', verifyToken, async (req: CustomRequest, res: Response) => {
+  
+  if (!req.userId) {
+    res.status(401).send({error: "Unauthorized"})
+    return;
+  }
+
+  const { title, content } = req.body as {
+    title: string,
+    content: string,
+  };
+
+  if (!title || !content ) {
+    res.status(201).send({
+      error: "Title and content is required!"
+    });
+    return;
+  }
+
+  const newPost = await prisma.post.create({
+    data: {
+      title: title,
+      content: content,
+      userId: req.userId,
+    }
+  });
+  res.status(201).send(newPost);
+  return;
+
+
+
 });
 
 
