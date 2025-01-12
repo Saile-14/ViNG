@@ -9,6 +9,7 @@ import Navbar from './components/ui/Navbar.tsx';
 import AuthSignup from './pages/AuthSignup.tsx';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { MyProfile } from './pages/MyProfile.tsx';
+import { Feed } from './pages/Feed.tsx';
 
 const queryClient = new QueryClient();
 
@@ -21,11 +22,12 @@ createRoot(document.getElementById('root')!).render(
       <BrowserRouter>
       <Navbar />
         <Routes>
-          <Route element={<AuthSignup />} >
+        <Route element={<AuthSignup />} >
             <Route index path="/" element={<Home />} />
             <Route path="/dashboard" element={<AuthSignup />} />
             <Route path="/sign-up" element={<Signup/>} />
             <Route path="/my-profile" element={<MyProfile />} />
+            <Route path="/feed" element={<Feed />} />
           </Route>    
         </Routes>
       </BrowserRouter>

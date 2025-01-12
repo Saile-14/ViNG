@@ -21,6 +21,8 @@ interface CustomRequest extends Request {
   userId?: number;
 }
 
+
+
 const verifyToken = (req:CustomRequest, res:Response, next: NextFunction ): void  => {
 
   const token = req.headers["x-access-token"];
@@ -52,7 +54,7 @@ const verifyToken = (req:CustomRequest, res:Response, next: NextFunction ): void
 app.post('/create-user', async (req: Request, res: Response) => {
   const userData = req.body;
 
-  if (!userData.email || !userData.name || userData.password ) {
+  if (!userData.email || !userData.name || !userData.password ) {
     res.send({error: "You've left empty fields"});
     return;
   }
@@ -97,7 +99,7 @@ app.post('/create-user', async (req: Request, res: Response) => {
         data: {
             email: userData.email,
             password: hashedPassword,
-            fullName: userData.fullName
+            name: userData.name
         }
     });
   } catch (error) {
@@ -133,8 +135,6 @@ app.post('/login', async (req:Request, res:Response) => {
       return;
     }
 
-    delete user.password;
-
     res.send({
       token: jwt.sign({ userId: user.id }, process.env.SECRET_KEY!, { expiresIn: "1h" }),
       user
@@ -143,7 +143,7 @@ app.post('/login', async (req:Request, res:Response) => {
 
 
 
-app.get('/get-posts', verifyToken, async (req: Request, res: Response ) => {
+app.get('/get-posts', async (req: Request, res: Response ) => {
 
 
   try {

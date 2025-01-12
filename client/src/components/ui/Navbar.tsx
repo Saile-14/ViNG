@@ -18,25 +18,25 @@ const Navbar = () => {
           <NavigationMenu >
             <NavigationMenuList className="" >
               <NavigationMenuItem>
-                <Link to="/dashboard">
-                  <NavigationMenuLink className={`${navigationMenuTriggerStyle()} w-32 text-center`} >
+                <NavigationMenuLink asChild>
+                  <Link to="/dashboard" className={`${navigationMenuTriggerStyle()} w-32 text-center`}>
                     Dashboard
-                  </NavigationMenuLink>
-                </Link>
+                  </Link>
+                </NavigationMenuLink>
               </NavigationMenuItem>
               <NavigationMenuItem>
-                <Link to="/docs" >
-                  <NavigationMenuLink className={`${navigationMenuTriggerStyle()} w-32 text-center`}>
-                    Something
-                  </NavigationMenuLink>
-                </Link>
+                <NavigationMenuLink asChild>
+                  <Link to="/feed" className={`${navigationMenuTriggerStyle()} w-32 text-center`}>
+                    Feed
+                  </Link>
+                </NavigationMenuLink>
               </NavigationMenuItem>
               <NavigationMenuItem>
-                <Link to="/docs">
-                  <NavigationMenuLink className={`${navigationMenuTriggerStyle()} w-32 text-center`}>
-                    Nothing
-                  </NavigationMenuLink>
-                </Link>
+                <NavigationMenuLink asChild>
+                  <Link to="/my-profile" className={`${navigationMenuTriggerStyle()} w-32 text-center`}>
+                    My Profile
+                  </Link>
+                </NavigationMenuLink>
               </NavigationMenuItem>
             </NavigationMenuList>
           </NavigationMenu>
