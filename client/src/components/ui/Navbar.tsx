@@ -9,25 +9,28 @@ import {
 import { Link } from "react-router";
 import { ModeToggle } from "../mode-toggle";
 
+const LoggedIn = false;
+
 const Navbar = () => {
   return (
     <nav className="pt-6 px-10 pb-4 z-40 fixed top-0 w-screen flex items-center justify-between bg-background">
         <Link to="/" className="text-4xl w-44 text-center font-bold text-primary ">ViNG </ Link>
-
+        {LoggedIn ?
         <div className="flex-grow flex text-center justify-center">
+          
           <NavigationMenu >
             <NavigationMenuList className="" >
               <NavigationMenuItem>
                 <NavigationMenuLink asChild>
-                  <Link to="/dashboard" className={`${navigationMenuTriggerStyle()} w-32 text-center`}>
-                    Dashboard
+                  <Link to="/feed" className={`${navigationMenuTriggerStyle()} w-32 text-center`}>
+                    Feed
                   </Link>
                 </NavigationMenuLink>
               </NavigationMenuItem>
               <NavigationMenuItem>
                 <NavigationMenuLink asChild>
-                  <Link to="/feed" className={`${navigationMenuTriggerStyle()} w-32 text-center`}>
-                    Feed
+                  <Link to="/create-post" className={`${navigationMenuTriggerStyle()} w-32 text-center`}>
+                    Send a ViNG
                   </Link>
                 </NavigationMenuLink>
               </NavigationMenuItem>
@@ -40,14 +43,21 @@ const Navbar = () => {
               </NavigationMenuItem>
             </NavigationMenuList>
           </NavigationMenu>
-        </div>
+        </div> : null }
 
         <div className="flex gap-4 w-44 justify-center">
-          <Link to="/sign-up" >
+        {LoggedIn ? 
+          <Link to="/" >
             <Button>
-              Sign up
+              Log out
             </Button>
-          </Link>
+          </Link> 
+          :
+          <Link to="/" >
+          <Button>
+            Log In
+          </Button>
+        </Link>}
           <ModeToggle />
         </div>
     </nav>

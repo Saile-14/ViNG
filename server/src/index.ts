@@ -203,7 +203,7 @@ app.post('/login', async (req:Request, res:Response) => {
     const loginData = req.body;
 
     if (!loginData.email || !loginData.password) {
-      res.send({error: "You've left empty fields!"});
+      res.status(400).send({error: "You've left empty fields!"});
       return;
     }
 
@@ -212,19 +212,19 @@ app.post('/login', async (req:Request, res:Response) => {
     });
 
     if (!user) {
-      res.send({error:"No user found with that email."});
+      res.status(404).send({error:"No user found with that email."});
       return;
     }
 
     const passwordValid = await bcrypt.compare(loginData.password, user.password);
 
     if (!passwordValid) {
-      res.send({error: "password for that email is invalid."});
+      res.status(401).send({error: "password for that email is invalid."});
       return;
     }
 
-    res.send({
-      token: jwt.sign({ userId: user.id }, process.env.SECRET_KEY!, { expiresIn: "1h" }),
+    res.status(200).send({
+      token: jwt.sign({ userId: user.id }, 'supersecretsting', { expiresIn: "1h" }),
       user
   });
 });
