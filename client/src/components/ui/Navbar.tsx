@@ -11,7 +11,7 @@ import { ModeToggle } from "../mode-toggle";
 
 const Navbar = () => {
   return (
-    <nav className="mt-6 px-10 pb-10 z-40 fixed top-0 w-screen flex items-center justify-between">
+    <nav className="pt-6 px-10 pb-4 z-40 fixed top-0 w-screen flex items-center justify-between bg-background">
         <Link to="/" className="text-4xl w-44 text-center font-bold text-primary ">ViNG </ Link>
 
         <div className="flex-grow flex text-center justify-center">

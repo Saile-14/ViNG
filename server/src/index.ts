@@ -110,6 +110,94 @@ app.post('/create-user', async (req: Request, res: Response) => {
   res.send({ success: "Added user successfully"});
 });
 
+app.patch('/update-user/:userId', verifyToken, async (req: CustomRequest , res: Response) => {
+
+    const userId = parseInt(req.params.postId);
+    const userData = req.body;
+
+    const user = await prisma.user.findUnique({
+      where: { id: userId },
+    });
+
+    if (!user) {
+      res.send({ error: 'User not found' })
+      return;
+    }
+
+    if (user.id !== req.userId) {
+      res.send({ error: 'You do not have permission to edit this user' });
+      return;
+    }
+
+    if (userData.password) {
+      
+      schema
+      .is().min(8)                                    
+      .is().max(100)                                  
+      .has().uppercase()                              
+      .has().lowercase()                              
+      .has().digits(2)                                
+      .has().not().spaces(); 
+
+
+        const passwordValid = schema.validate(userData.password);
+
+        if (!passwordValid) {
+          res.send({ error: "Your password is not safe, please include 8 characters with upper and lower case letters, and numbers." });
+          return;
+        }
+
+          const hashedPassword = bcrypt.hashSync(userData.password, 10);
+
+          const updatedUser = await prisma.user.update({
+            where: { id: userId },
+            data: {
+              name: userData.name || undefined,
+              password: hashedPassword || undefined
+            },
+          });
+          res.send({ success: "Updated " + updatedUser.name })
+          return;
+        }
+
+    const updatedUser = await prisma.user.update({
+      where: { id: userId },
+      data: {
+        name: userData.name || undefined,
+      },
+    });
+
+  res.send({ success: "Updated " + updatedUser.name })
+  return;
+});
+
+app.delete('/delete-user/:userId', verifyToken, async (req: CustomRequest, res: Response) => {
+
+  const userId = parseInt(req.params.userId);
+
+  const user = await prisma.user.findUnique({
+    where: { id: userId },
+  });
+
+  if (!user) {
+    res.send({ error: "User not found "});
+    return;
+  }
+
+  if (user.id !== req.userId) {
+    res.send({ error: 'You do not have permission to edit this user' });
+    return;
+  }
+
+
+  const deletedUser = await prisma.user.delete({
+    where: { id: userId }
+  });
+
+  res.send({ success: "Deleted " + deletedUser.name + " from user list." });
+  return;
+});
+
 
 app.post('/login', async (req:Request, res:Response) => {
     const loginData = req.body;
@@ -203,9 +291,65 @@ app.post('/create-post', verifyToken, async (req: CustomRequest, res: Response) 
   });
   res.status(201).send(newPost);
   return;
+});
+
+app.patch('/update-post/:postId', verifyToken, async (req: CustomRequest , res: Response) => {
+
+  const postId = parseInt(req.params.postId);
+    const postData = req.body;
+
+    const post = await prisma.post.findUnique({
+      where: { id: postId },
+    });
+
+    if (!post) {
+      res.send({ error: 'Post not found' })
+      return;
+    }
+
+    if (post.userId !== req.userId) {
+      res.send({ error: 'You do not have permission to edit this post' });
+      return;
+    }
+
+    const updatedPost = await prisma.post.update({
+      where: { id: postId },
+      data: {
+        title: postData.title || undefined,
+        content: postData.content || undefined,
+      },
+    });
+
+  res.send({ success: "Updated " + updatedPost.title })
+  return;
+});
 
 
+app.delete('/delete-post/:postId', verifyToken, async (req: CustomRequest, res: Response) => {
 
+  const postId = parseInt(req.params.postId);
+
+  const post = await prisma.post.findUnique({
+    where: { id: postId },
+  });
+
+  if (!post) {
+    res.send({ error: "Post not found"});
+    return;
+  }
+
+  if (post.userId !== req.userId) {
+    res.send({ error: 'You do not have permission to edit this user' });
+    return;
+  }
+
+
+  const deletedPost = await prisma.post.delete({
+    where: { id: postId }
+  });
+
+  res.send({ success: "Deleted " + deletedPost.title});
+  return;
 });
 
 
