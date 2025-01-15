@@ -1,6 +1,6 @@
 import { useUserPosts } from "@/lib/hooks/useUserPosts";
 
-export function MyProfile() {
+export default function MyProfile() {
   const { data: posts, isLoading, isError, error } = useUserPosts();
 
   if (isLoading) return <div>Loading...</div>;

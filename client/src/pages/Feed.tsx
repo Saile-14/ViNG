@@ -16,7 +16,7 @@ import {
 import { usePosts } from "@/lib/hooks/usePosts";
 import { Scale } from "lucide-react";
 
-export function Feed() {
+export default function Feed() {
   const { data: posts, isLoading, isError, error } = usePosts();
 
   if (isLoading) return <div>Loading...</div>;
