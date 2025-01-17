@@ -2,9 +2,11 @@ import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { useMutation } from "@tanstack/react-query";
 import { loginMutation } from "@/lib/mutations/login";
+import { authContext } from "@/main";
+import { Navigate, useNavigate } from "react-router";
 
 export function LoginForm({
   className,
@@ -15,6 +17,9 @@ export function LoginForm({
     password: "",
   });
 
+  const [signedIn, setSignedIn] = useContext(authContext)
+  const navigate = useNavigate();
+
   const loginFunc = useMutation({
     mutationFn: () =>
       loginMutation({
@@ -24,10 +29,12 @@ export function LoginForm({
     onSuccess: (data) => {
       if (!data.token) {
         alert('Invalid response: No token provided.');
+        
         return;
       }
       localStorage.setItem("token", data.token);
-      window.location.href = "/feed";
+      setSignedIn(true);
+      navigate('/feed');
     },
     onError: (error: any) => {
       const errorMessage =
@@ -46,13 +53,13 @@ export function LoginForm({
   };
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault(); // Prevent default form submission
-    loginFunc.mutate(); // Trigger the mutation
+    e.preventDefault(); 
+    loginFunc.mutate();
   };
 
   return (
     <form
-      onSubmit={handleSubmit} // Attach the corrected handleSubmit
+      onSubmit={handleSubmit}
       className={cn("flex flex-col gap-6", className)}
       {...props}
     >

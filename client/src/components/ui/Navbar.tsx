@@ -8,14 +8,19 @@ import {
 } from "@/components/ui/navigation-menu"
 import { Link } from "react-router";
 import { ModeToggle } from "../mode-toggle";
+import { authContext } from "@/main";
+import { useContext } from "react";
 
-const LoggedIn = false;
+
 
 const Navbar = () => {
+
+  const [signedIn, setSignedIn] = useContext(authContext)
+
   return (
     <nav className="pt-6 px-10 pb-4 z-40 fixed top-0 w-screen flex items-center justify-between bg-background">
         <Link to="/" className="text-4xl w-44 text-center font-bold text-primary ">ViNG </ Link>
-        {LoggedIn ?
+        {signedIn ?
         <div className="flex-grow flex text-center justify-center">
           
           <NavigationMenu >
@@ -46,7 +51,8 @@ const Navbar = () => {
         </div> : null }
 
         <div className="flex gap-4 w-44 justify-center">
-        {LoggedIn ? 
+          <Button onClick={() => {console.log(signedIn)}} />
+        {signedIn ? 
           <Link to="/" >
             <Button>
               Log out

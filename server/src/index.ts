@@ -34,10 +34,10 @@ const verifyToken = (req:CustomRequest, res:Response, next: NextFunction ): void
 
   
 
-  jwt.verify(token, process.env.SECRET_KEY!, (error, decoded) => {
+  jwt.verify(token, "supersecretstring", (error, decoded) => {
 
       if (error) {
-          res.send({ error: "You session has expired or does not exist." });
+          res.status(401).send({ error: "Your session has expired or does not exist." });
           return;
       } else if (decoded && typeof decoded !== "string" && "userId" in decoded) {
         req.userId = (decoded as jwt.JwtPayload).userId;
@@ -224,14 +224,14 @@ app.post('/login', async (req:Request, res:Response) => {
     }
 
     res.status(200).send({
-      token: jwt.sign({ userId: user.id }, 'supersecretsting', { expiresIn: "1h" }),
+      token: jwt.sign({ userId: user.id }, 'supersecretstring', { expiresIn: "1h" }),
       user
   });
 });
 
 
 
-app.get('/get-posts', async (req: Request, res: Response ) => {
+app.get('/get-posts', verifyToken, async (req: Request, res: Response ) => {
 
 
   try {

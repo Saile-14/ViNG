@@ -1,9 +1,17 @@
 import { GalleryVerticalEnd } from "lucide-react"
 
 import { LoginForm } from "@/components/login-form"
+import { Navigate } from "react-router";
 
 
 export default function Home() {
+
+  const token = localStorage.getItem('token');
+
+  if (token) {
+    return <Navigate to="/feed" replace />;
+  }
+
   return (
     <div className="grid min-h-svh lg:grid-cols-2">
       <div className="flex flex-col gap-4 p-6 md:p-10">
