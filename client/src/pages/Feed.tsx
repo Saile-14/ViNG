@@ -14,26 +14,28 @@ import {
   CardTitle,
 } from "@/components/ui/card"
 import { usePosts } from "@/lib/hooks/usePosts";
-import { Scale } from "lucide-react";
+import { PencilIcon, Trash2Icon } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 export default function Feed() {
-  const { data: posts, isLoading, isError, error } = usePosts();
-
-  if (isLoading) return <div>Loading...</div>;
-  if (isError)   return <div>Error: {String(error)}</div>;
-  if (!posts)    return <div>No posts found.</div>;
-
+  const { data: posts} = usePosts();
+  
   return (
     <>
       <div className="flex h-screen justify-center items-center">
-        <Carousel >
-          <CarouselContent className=" sw-[1000px]">
+        <Carousel className=" max-w-2xl ">
+          <CarouselContent >
             {posts.map((post: any, postIndex: number) => (
               <CarouselItem key={postIndex}>
-                <Card>
-                  <CardHeader><CardTitle>{post.title}</CardTitle></CardHeader>
+                <Card className="max-h-2xl">
+                  <CardHeader ><CardTitle className="">{post.title}</CardTitle></CardHeader>
                   <CardContent className="h-[200px]">{post.content}</CardContent>
-                  <CardFooter><small>Created at: {post.createdAt}</small></CardFooter>
+                  <CardFooter className="flex justify-between">
+                    <small>Created at: {post.createdAt}</small>
+                    <div className="flex gap-4">
+                      <Button><PencilIcon /></Button><Button className="bg-red-700 hover:bg-red-800"><Trash2Icon /></Button>
+                    </div>                   
+                  </CardFooter>
                 </Card>             
             </CarouselItem>
       ))}
