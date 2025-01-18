@@ -52,18 +52,18 @@ const Navbar = () => {
 
         <div className="flex gap-4 w-44 justify-center">
           <Button onClick={() => {console.log(signedIn)}} />
-        {signedIn ? 
-          <Link to="/" >
-            <Button>
-              Log out
-            </Button>
-          </Link> 
+        {signedIn ?  
+        <Link to="/" >
+          <Button onClick={() => {localStorage.removeItem("token"); setSignedIn(false);}}>
+            Log out
+          </Button>
+        </Link>           
           :
           <Link to="/" >
-          <Button>
-            Log In
-          </Button>
-        </Link>}
+            <Button>
+              Log In
+            </Button>
+          </Link>}
           <ModeToggle />
         </div>
     </nav>

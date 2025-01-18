@@ -28,7 +28,7 @@ const verifyToken = (req:CustomRequest, res:Response, next: NextFunction ): void
   const token = req.headers["x-access-token"];
 
   if (!token || Array.isArray(token)) {
-    res.send({error: 'No Token Provided'});
+    res.status(401).send({error: 'No Token Provided'});
     return;
   }
 
@@ -246,7 +246,7 @@ app.get('/get-posts', verifyToken, async (req: Request, res: Response ) => {
   }
 });
 
-app.get('/get-user-posts',verifyToken, async (req: CustomRequest, res: Response) => {
+app.get('/get-user-posts', verifyToken, async (req: CustomRequest, res: Response) => {
 
 
     try {

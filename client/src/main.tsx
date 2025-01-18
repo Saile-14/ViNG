@@ -12,6 +12,7 @@ import Feed  from './pages/Feed.tsx';
 import ProtectedRoute from './components/ProtectedRoute.tsx';
 import Home from './pages/Home.tsx';
 import Navbar from './components/ui/Navbar.tsx';
+import CreatePost from './pages/CreatePost.tsx';
 
 
 const queryClient = new QueryClient();
@@ -47,6 +48,7 @@ function App() {
               <Route path="/sign-up" element={<Signup />} />
               <Route path="/my-profile" element={<ProtectedRoute><MyProfile /></ProtectedRoute>} />
               <Route path="/feed" element={<ProtectedRoute><Feed /></ProtectedRoute>} />
+              <Route path="/create-post" element={<ProtectedRoute><CreatePost /></ProtectedRoute>} />
             </Routes>
           </BrowserRouter>
         </QueryClientProvider>
