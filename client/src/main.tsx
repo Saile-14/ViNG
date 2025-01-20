@@ -13,32 +13,53 @@ import ProtectedRoute from './components/ProtectedRoute.tsx';
 import Home from './pages/Home.tsx';
 import Navbar from './components/ui/Navbar.tsx';
 import CreatePost from './pages/CreatePost.tsx';
+import { useCurrentUser } from './lib/hooks/useCurrentUser.ts';
 
 
 const queryClient = new QueryClient();
 
+export interface AuthContextType {
+  signedIn: boolean;
+  setSignedIn: Dispatch<SetStateAction<boolean>>;
+  currentUser: number | null;
+  setCurrentUser: Dispatch<SetStateAction<number | null>>;
+}
 
-
-export const authContext = createContext<[boolean, Dispatch<SetStateAction<boolean>>]>([false, () => {}]);
+export const AuthContext = createContext<AuthContextType | undefined>(  undefined)
 
 function App() {
 
-  useEffect(()=> {
-    const token = localStorage.getItem('token')
-    
+  const [signedIn, setSignedIn] = useState<boolean>(false);
+  const [currentUser, setCurrentUser] = useState<number | null>(null);
+  const { data: user, refetch } = useCurrentUser();
+
+  const authValue: AuthContextType = {
+    signedIn,
+    setSignedIn,
+    currentUser,
+    setCurrentUser
+  };
+
+  useEffect(() => {
+    const token = localStorage.getItem('token');
     if (token) {
       setSignedIn(true);
-      
-    } else {
-      setSignedIn(false);
+      refetch(); 
     }
-  },[])
+  }, [refetch]);
+
+  useEffect(() => {
+    if (user) {
+      setCurrentUser(user.id);
+    }
+  }, [user]);
+
+  
  
 
-  const [signedIn, setSignedIn] = useState<boolean>(false);
-
+  
   return (
-    <authContext.Provider value={[signedIn, setSignedIn]}>
+    <AuthContext.Provider value={authValue}>
       <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
         <QueryClientProvider client={queryClient}>
           <BrowserRouter>
@@ -53,7 +74,7 @@ function App() {
           </BrowserRouter>
         </QueryClientProvider>
       </ThemeProvider>
-    </authContext.Provider>
+    </AuthContext.Provider>
   );
 }
 

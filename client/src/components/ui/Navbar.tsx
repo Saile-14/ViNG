@@ -8,14 +8,14 @@ import {
 } from "@/components/ui/navigation-menu"
 import { Link } from "react-router";
 import { ModeToggle } from "../mode-toggle";
-import { authContext } from "@/main";
+import { AuthContext, AuthContextType } from "@/main";
 import { useContext } from "react";
 
 
 
 const Navbar = () => {
 
-  const [signedIn, setSignedIn] = useContext(authContext)
+  const auth = useContext(AuthContext)
 
   return (
     <nav className="pt-6 px-10 pb-4 z-40 fixed top-0 w-screen flex items-center justify-between bg-background">

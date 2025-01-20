@@ -50,6 +50,22 @@ const verifyToken = (req:CustomRequest, res:Response, next: NextFunction ): void
 
 };
 
+app.get('/current-user', verifyToken, async (req: CustomRequest, res: Response) => {
+  try {
+    const user = await prisma.user.findUnique({
+      where: { id: req.userId },
+      select: { id: true }
+    });
+    if (!user) {
+      res.status(404).json({ error: 'User not found' });
+      return;
+    }
+    res.status(200).json(user);
+  } catch (error) {
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
 
 app.post('/create-user', async (req: Request, res: Response) => {
   const userData = req.body;
@@ -231,7 +247,7 @@ app.post('/login', async (req:Request, res:Response) => {
 
 
 
-app.get('/get-posts', verifyToken, async (req: Request, res: Response ) => {
+app.get('/get-posts', verifyToken, async (req: CustomRequest, res: Response ) => {
 
 
   try {
@@ -241,6 +257,7 @@ app.get('/get-posts', verifyToken, async (req: Request, res: Response ) => {
       },
     });
     res.send(posts);
+ 
   } catch (error) {
     res.status(500).send({error: "Failed to fetch posts"});  
   }

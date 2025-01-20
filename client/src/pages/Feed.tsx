@@ -25,7 +25,7 @@ export default function Feed() {
       <div className="flex h-screen justify-center items-center">
         <Carousel className=" max-w-2xl ">
           <CarouselContent >
-            {posts.map((post: any, postIndex: number) => (
+            {posts?.map((post: any, postIndex: number) => (
               <CarouselItem key={postIndex}>
                 <Card className="max-h-2xl">
                   <CardHeader ><CardTitle className="">{post.title}</CardTitle></CardHeader>
