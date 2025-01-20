@@ -16,9 +16,17 @@ import {
 import { usePosts } from "@/lib/hooks/usePosts";
 import { PencilIcon, Trash2Icon } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useContext } from "react";
+import { AuthContext } from "@/main";
 
 export default function Feed() {
-  const { data: posts} = usePosts();
+  const { data: posts, isLoading, isError, error } = usePosts();
+
+  const auth = useContext(AuthContext)
+  
+    if (isLoading) return <div>Loading...</div>;
+    if (isError)   return <div>Error: {String(error)}</div>;
+    if (!posts)    return <div>No posts found.</div>;
   
   return (
     <>
@@ -32,9 +40,9 @@ export default function Feed() {
                   <CardContent className="h-[200px]">{post.content}</CardContent>
                   <CardFooter className="flex justify-between">
                     <small>Created at: {post.createdAt}</small>
-                    <div className="flex gap-4">
+                    {auth?.currentUser == post.userId ? <div className="flex gap-4">
                       <Button><PencilIcon /></Button><Button className="bg-red-700 hover:bg-red-800"><Trash2Icon /></Button>
-                    </div>                   
+                    </div> : null}                 
                   </CardFooter>
                 </Card>             
             </CarouselItem>

@@ -9,18 +9,42 @@ import {
 import { Link } from "react-router";
 import { ModeToggle } from "../mode-toggle";
 import { AuthContext, AuthContextType } from "@/main";
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
+import { useCurrentUser } from "@/lib/hooks/useCurrentUser";
 
 
 
 const Navbar = () => {
 
+  const { data: user, refetch } = useCurrentUser();
+
   const auth = useContext(AuthContext)
+
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    if (token) {
+      auth?.setSignedIn(true);
+      refetch(); 
+    }
+  }, [refetch]);
+
+  useEffect(() => {
+    if (user) {
+      auth?.setCurrentUser(user.id);
+    }
+  }, [user]);
+
+  useEffect(() => {
+    
+    console.log(user?.id);}
+    
+
+    ,[useCurrentUser])
 
   return (
     <nav className="pt-6 px-10 pb-4 z-40 fixed top-0 w-screen flex items-center justify-between bg-background">
         <Link to="/" className="text-4xl w-44 text-center font-bold text-primary ">ViNG </ Link>
-        {signedIn ?
+        {auth?.signedIn ?
         <div className="flex-grow flex text-center justify-center">
           
           <NavigationMenu >
@@ -51,10 +75,10 @@ const Navbar = () => {
         </div> : null }
 
         <div className="flex gap-4 w-44 justify-center">
-          <Button onClick={() => {console.log(signedIn)}} />
-        {signedIn ?  
+          <Button onClick={() => {console.log(auth)}} />
+        {auth?.signedIn ?  
         <Link to="/" >
-          <Button onClick={() => {localStorage.removeItem("token"); setSignedIn(false);}}>
+          <Button onClick={() => {localStorage.removeItem("token"); auth.setSignedIn(false);}}>
             Log out
           </Button>
         </Link>           

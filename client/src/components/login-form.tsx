@@ -3,9 +3,9 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import React, { useContext, useState } from "react";
-import { useMutation } from "@tanstack/react-query";
+import { QueryClient, useMutation, useQueryClient } from "@tanstack/react-query";
 import { loginMutation } from "@/lib/mutations/login";
-import { authContext } from "@/main";
+import { AuthContext } from "@/main";
 import { Navigate, useNavigate } from "react-router";
 
 export function LoginForm({
@@ -17,7 +17,10 @@ export function LoginForm({
     password: "",
   });
 
-  const [signedIn, setSignedIn] = useContext(authContext)
+  
+ const queryClient = useQueryClient()
+
+  const auth = useContext(AuthContext)
   const navigate = useNavigate();
 
   const loginFunc = useMutation({
@@ -33,7 +36,8 @@ export function LoginForm({
         return;
       }
       localStorage.setItem("token", data.token);
-      setSignedIn(true);
+      auth?.setSignedIn(true);
+      queryClient.invalidateQueries({ queryKey: ['currentUser'] });
       navigate('/feed');
     },
     onError: (error: any) => {

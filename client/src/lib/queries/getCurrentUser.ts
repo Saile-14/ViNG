@@ -5,6 +5,6 @@ export interface User {
 }
 
 export const getCurrentUser = async (): Promise<User> => {
-  const { data } = await api.get('/me');
+  const { data } = await api.get('/current-user');
   return data;
 };

@@ -25,43 +25,31 @@ export interface AuthContextType {
   setCurrentUser: Dispatch<SetStateAction<number | null>>;
 }
 
-export const AuthContext = createContext<AuthContextType | undefined>(  undefined)
+export const AuthContext = createContext<AuthContextType | undefined>(undefined)
 
 function App() {
 
   const [signedIn, setSignedIn] = useState<boolean>(false);
   const [currentUser, setCurrentUser] = useState<number | null>(null);
-  const { data: user, refetch } = useCurrentUser();
+  
 
   const authValue: AuthContextType = {
     signedIn,
     setSignedIn,
     currentUser,
     setCurrentUser
-  };
-
-  useEffect(() => {
-    const token = localStorage.getItem('token');
-    if (token) {
-      setSignedIn(true);
-      refetch(); 
-    }
-  }, [refetch]);
-
-  useEffect(() => {
-    if (user) {
-      setCurrentUser(user.id);
-    }
-  }, [user]);
+  }
+ 
 
   
  
 
   
   return (
-    <AuthContext.Provider value={authValue}>
+    
       <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
         <QueryClientProvider client={queryClient}>
+        <AuthContext.Provider value={authValue}>
           <BrowserRouter>
             <Navbar />
             <Routes>
@@ -72,9 +60,10 @@ function App() {
               <Route path="/create-post" element={<ProtectedRoute><CreatePost /></ProtectedRoute>} />
             </Routes>
           </BrowserRouter>
-        </QueryClientProvider>
-      </ThemeProvider>
-    </AuthContext.Provider>
+        </AuthContext.Provider>
+      </QueryClientProvider>
+    </ThemeProvider>
+    
   );
 }
 
