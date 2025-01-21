@@ -318,7 +318,7 @@ app.patch('/update-post/:postId', verifyToken, async (req: CustomRequest , res: 
     const post = await prisma.post.findUnique({
       where: { id: postId },
     });
-
+    
     if (!post) {
       res.send({ error: 'Post not found' })
       return;
@@ -356,7 +356,7 @@ app.delete('/delete-post/:postId', verifyToken, async (req: CustomRequest, res: 
   }
 
   if (post.userId !== req.userId) {
-    res.send({ error: 'You do not have permission to edit this user' });
+    res.send({ error: 'You do not have permission to delete this user' });
     return;
   }
 
